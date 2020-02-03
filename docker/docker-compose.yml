@@ -1,0 +1,9 @@
+version: '3'
+services:
+  local-mongo:
+    image: mongo
+    container_name: local-mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo/conf:/etc/mongo
