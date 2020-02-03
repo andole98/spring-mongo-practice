@@ -5,7 +5,9 @@ import com.mongodb.client.MongoClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
@@ -52,6 +54,16 @@ public class Mongo {
 
     @Test
     void find() {
-        mongoTemplate.find(new Query(where("name").is("idbb")), Person.class);
+        clockWatch(this::findWithoutIndex);
+        mongoTemplate.indexOps(Person.class).ensureIndex(new Index("number", Sort.Direction.ASC));
+        clockWatch(this::findWithIndex);
+    }
+
+    private void findWithoutIndex() {
+        mongoTemplate.find(new Query(where("number").is(9898)), Person.class);
+    }
+
+    private void findWithIndex() {
+        mongoTemplate.find(new Query(where("number").is(9898)), Person.class);
     }
 }
