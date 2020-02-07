@@ -1,37 +1,25 @@
 package com.andole.mongo.domain;
 
-import javax.persistence.*;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+import javax.persistence.*;
+
+
+@Getter
+@EqualsAndHashCode(of = "id")
 @Entity
-@Table(indexes = @Index(columnList = "name,number"))
-public class JpaPerson extends Person {
+@Table(indexes = @Index(columnList = "name"))
+public class JpaPerson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    public JpaPerson(String name, int number) {
-        super(name, number);
-    }
+    @Column(name = "name")
+    private String name;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        JpaPerson jpaPerson = (JpaPerson) o;
-        return Objects.equals(id, jpaPerson.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public JpaPerson(String name) {
+        this.name = name;
     }
 }

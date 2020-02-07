@@ -10,8 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @DataJpaTest
-public class H2 {
-    private static final Logger log = getLogger(H2.class);
+public class H2Test {
+    private static final Logger log = getLogger(H2Test.class);
     @Autowired
     private TestEntityManager tm;
 
@@ -20,7 +20,7 @@ public class H2 {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < 10000; i++) {
-            log.info(tm.persist(new JpaPerson("andole", i)).toString());
+            log.info(tm.persist(new JpaPerson("andole")).toString());
         }
 
         long end = System.currentTimeMillis();

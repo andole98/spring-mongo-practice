@@ -1,6 +1,6 @@
 package com.andole.mongo;
 
-import com.andole.mongo.domain.Person;
+import com.andole.mongo.domain.MongoPerson;
 import com.mongodb.client.MongoClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,13 +17,13 @@ import java.util.stream.IntStream;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-public class Mongo {
-    private static final Logger log = getLogger(Mongo.class);
+public class MongoTest {
+    private static final Logger log = getLogger(MongoTest.class);
     private MongoTemplate mongoTemplate;
 
     @BeforeEach
     void setUp() {
-        mongoTemplate = new MongoTemplate(MongoClients.create(), "database");
+        mongoTemplate = new MongoTemplate(MongoClients.create("mongodb://10.113.92.223"), "database");
     }
 
     @Test
@@ -41,13 +41,13 @@ public class Mongo {
 
     void insertOne() {
         for (int i = 0; i < 10000; i++) {
-            mongoTemplate.insert(new Person("andole", i));
+            mongoTemplate.insert(new MongoPerson("andole"));
         }
     }
 
     void collections() {
-        List<Person> idbb = IntStream.range(0, 10000)
-                .mapToObj(i -> new Person("idbb", i))
+        List<MongoPerson> idbb = IntStream.range(0, 10000)
+                .mapToObj(i -> new MongoPerson("idbb"))
                 .collect(Collectors.toList());
         mongoTemplate.insertAll(idbb);
     }
@@ -55,15 +55,15 @@ public class Mongo {
     @Test
     void find() {
         clockWatch(this::findWithoutIndex);
-        mongoTemplate.indexOps(Person.class).ensureIndex(new Index("number", Sort.Direction.ASC));
+        mongoTemplate.indexOps(MongoPerson.class).ensureIndex(new Index("number", Sort.Direction.ASC));
         clockWatch(this::findWithIndex);
     }
 
     private void findWithoutIndex() {
-        mongoTemplate.find(new Query(where("number").is(9898)), Person.class);
+        mongoTemplate.find(new Query(where("number").is(9898)), MongoPerson.class);
     }
 
     private void findWithIndex() {
-        mongoTemplate.find(new Query(where("number").is(9898)), Person.class);
+        mongoTemplate.find(new Query(where("number").is(9898)), MongoPerson.class);
     }
 }
